@@ -1,0 +1,320 @@
+{% extends 'core/base.html' %}
+
+{% block title %}{{ post.title }}{% endblock %}
+
+{% block content %}
+<style>
+    .detail-container {
+        max-width: 800px;
+        margin: 60px auto;
+        padding: 0 20px;
+    }
+
+    .back-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 30px;
+        color: var(--gray);
+        text-decoration: none;
+        font-weight: 500;
+        transition: var(--transition);
+    }
+
+    .back-link:hover {
+        color: var(--primary);
+    }
+
+    .post-card {
+        background: var(--white);
+        border-radius: var(--radius);
+        padding: 40px;
+        box-shadow: var(--shadow);
+        margin-bottom: 30px;
+    }
+
+    .post-header {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        margin-bottom: 20px;
+        padding-bottom: 20px;
+        border-bottom: 2px solid var(--light);
+    }
+
+    .post-avatar {
+        width: 60px;
+        height: 60px;
+        background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--white);
+        font-size: 24px;
+        font-weight: 700;
+        flex-shrink: 0;
+    }
+
+    .post-meta h3 {
+        font-size: 18px;
+        font-weight: 700;
+        color: var(--dark);
+    }
+
+    .post-meta p {
+        font-size: 13px;
+        color: var(--gray);
+        display: flex;
+        align-items: center;
+        gap: 5px;
+    }
+
+    .post-title {
+        font-size: 32px;
+        font-weight: 800;
+        color: var(--dark);
+        margin-bottom: 20px;
+        letter-spacing: -0.5px;
+    }
+
+    .post-content {
+        color: var(--gray);
+        font-size: 16px;
+        line-height: 1.8;
+    }
+
+    .comments-section {
+        margin-top: 40px;
+    }
+
+    .comments-title {
+        font-size: 24px;
+        font-weight: 700;
+        color: var(--dark);
+        margin-bottom: 20px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .comments-title i {
+        color: var(--primary);
+    }
+
+    .comment-card {
+        background: var(--white);
+        border-radius: 12px;
+        padding: 20px;
+        margin-bottom: 15px;
+        box-shadow: var(--shadow);
+    }
+
+    .comment-header {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 10px;
+    }
+
+    .comment-avatar {
+        width: 40px;
+        height: 40px;
+        background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--white);
+        font-size: 16px;
+        font-weight: 700;
+        flex-shrink: 0;
+    }
+
+    .comment-meta h4 {
+        font-size: 15px;
+        font-weight: 700;
+        color: var(--dark);
+    }
+
+    .comment-meta p {
+        font-size: 12px;
+        color: var(--gray);
+    }
+
+    .comment-content {
+        color: var(--gray);
+        font-size: 14px;
+        padding-left: 50px;
+    }
+
+    .comment-form {
+        background: var(--white);
+        border-radius: var(--radius);
+        padding: 30px;
+        box-shadow: var(--shadow);
+        margin-top: 20px;
+    }
+
+    .comment-form h3 {
+        font-size: 20px;
+        font-weight: 700;
+        color: var(--dark);
+        margin-bottom: 15px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .comment-form h3 i {
+        color: var(--primary);
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    .form-group textarea {
+        width: 100%;
+        padding: 14px 16px;
+        border: 2px solid #e0e0e0;
+        border-radius: 10px;
+        font-size: 15px;
+        transition: var(--transition);
+        background: var(--light);
+        font-family: 'Poppins', sans-serif;
+        resize: vertical;
+        min-height: 100px;
+    }
+
+    .form-group textarea:focus {
+        outline: none;
+        border-color: var(--primary);
+        background: var(--white);
+        box-shadow: 0 0 0 3px rgba(102,126,234,0.1);
+    }
+
+    .btn-submit {
+        padding: 14px 30px;
+        background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+        color: var(--white);
+        border: none;
+        border-radius: 25px;
+        font-size: 15px;
+        font-weight: 700;
+        cursor: pointer;
+        transition: var(--transition);
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .btn-submit:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 25px rgba(102,126,234,0.3);
+    }
+
+    .login-prompt {
+        text-align: center;
+        padding: 20px;
+        background: var(--light);
+        border-radius: 10px;
+        color: var(--gray);
+        margin-top: 20px;
+    }
+
+    .login-prompt a {
+        color: var(--primary);
+        text-decoration: none;
+        font-weight: 600;
+    }
+
+    .login-prompt a:hover {
+        color: var(--secondary);
+    }
+
+    .no-comments {
+        text-align: center;
+        color: var(--gray);
+        padding: 30px;
+        font-style: italic;
+    }
+
+    @media (max-width: 768px) {
+        .post-card {
+            padding: 25px;
+        }
+
+        .post-title {
+            font-size: 24px;
+        }
+
+        .comment-content {
+            padding-left: 0;
+            margin-top: 10px;
+        }
+    }
+</style>
+
+<div class="detail-container">
+    <a href="/" class="back-link"><i class="fas fa-arrow-left"></i> Bosh sahifaga qaytish</a>
+
+    <div class="post-card">
+        <div class="post-header">
+            <div class="post-avatar">
+                {{ post.author.name|slice:":1"|upper }}
+            </div>
+            <div class="post-meta">
+                <h3>{{ post.author.name }}</h3>
+                <p><i class="fas fa-calendar"></i> {{ post.created_at|date:"d.m.Y H:i" }}</p>
+            </div>
+        </div>
+        <div class="post-title">{{ post.title }}</div>
+        <div class="post-content">{{ post.content }}</div>
+    </div>
+
+    <div class="comments-section">
+        <div class="comments-title">
+            <i class="fas fa-comments"></i> Izohlar ({{ comments.count }})
+        </div>
+
+        {% if comments %}
+            {% for comment in comments %}
+            <div class="comment-card">
+                <div class="comment-header">
+                    <div class="comment-avatar">
+                        {{ comment.author.username|slice:":1"|upper }}
+                    </div>
+                    <div class="comment-meta">
+                        <h4>{{ comment.author.username }}</h4>
+                        <p><i class="fas fa-calendar"></i> {{ comment.created_at|date:"d.m.Y H:i" }}</p>
+                    </div>
+                </div>
+                <div class="comment-content">{{ comment.content }}</div>
+            </div>
+            {% endfor %}
+        {% else %}
+        <div class="no-comments">
+            Hozircha izohlar mavjud emas
+        </div>
+        {% endif %}
+
+        {% if user.is_authenticated %}
+        <div class="comment-form">
+            <h3><i class="fas fa-plus-circle"></i> Izoh qo'shish</h3>
+            <form method="POST">
+                {% csrf_token %}
+                <div class="form-group">
+                    <textarea name="content" placeholder="Izohingizni yozing..." required></textarea>
+                </div>
+                <button type="submit" class="btn-submit"><i class="fas fa-paper-plane"></i> Yuborish</button>
+            </form>
+        </div>
+        {% else %}
+        <div class="login-prompt">
+            Izoh qo'shish uchun <a href="/login/">tizimga kiring</a>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
